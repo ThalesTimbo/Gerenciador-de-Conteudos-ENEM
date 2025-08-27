@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diagnóstico ENEM — Pontos Fortes & Fraquezas</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Diagnóstico ENEM — Pontos Fortes & Fraquezas</h1>
+          <div class="muted small">Local e offline • 40 questões inspiradas no estilo ENEM • Relatório ao final</div>
+        </div>
+      </div>
+      <div>
+        <button class="btn ghost" id="btnExport">Exportar resultados (.json)</button>
+      </div>
+    </header>
+
+    <section class="row hero card">
+      <div>
+        <p>
+          Responde as questões abaixo. No final, tu vais ver um diagnóstico por <b>área</b> (Linguagens, Matemática, Humanas, Natureza) e por <b>habilidades</b> (ex.: interpretação, porcentagem, ecologia etc.), com recomendações do que estudar para evoluir rápido.
+        </p>
+        <div class="grid cols-3">
+          <div class="kpi"><h3>Questões</h3><p id="kpiTotal">0</p></div>
+          <div class="kpi"><h3>Respondidas</h3><p id="kpiDone">0</p></div>
+          <div class="kpi"><h3>Acertos</h3><p id="kpiHits">0</p></div>
+        </div>
+        <div style="margin-top:12px">
+          <div class="progress"><div id="progress"></div></div>
+        </div>
+        <div style="margin-top:12px" class="muted small">Dica: pode salvar/fechar a página e voltar; tuas respostas ficam salvas neste navegador.</div>
+      </div>
+      <aside class="card" style="padding:16px;background:#0b1428">
+        <div class="grid">
+          <div class="badge"><span>🎯</span> Foco em diagnóstico</div>
+          <div class="badge"><span>⏱️</span> Sem tempo limite</div>
+          <div class="badge"><span>🔒</span> Dados só no teu navegador</div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap" id="skillsCloud"></div>
+        <div style="margin-top:12px">
+          <button class="btn" id="btnFinish">Finalizar e Ver Diagnóstico</button>
+          <button class="btn secondary" id="btnReset">Reiniciar</button>
+        </div>
+      </aside>
+    </section>
+
+    <section id="quiz" class="grid" style="margin-top:18px">
+      <!-- questions injected here -->
+    </section>
+
+    <section id="results" class="card hidden" style="margin-top:18px;padding:18px">
+      <h2 style="margin:0 0 8px 0">Teu Diagnóstico</h2>
+      <div class="muted">Resumo por área e por habilidade, com recomendações do que atacar primeiro.</div>
+
+      <div class="grid cols-2" style="margin-top:16px">
+        <div class="card" style="padding:12px">
+          <h3 style="margin-top:0">Desempenho por Área</h3>
+          <table class="table" id="tblAreas">
+            <thead><tr><th>Área</th><th>Acertos</th><th>Percentual</th><th>Prioridade</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="card" style="padding:12px">
+          <h3 style="margin-top:0">Habilidades (Top fraquezas)</h3>
+          <table class="table" id="tblSkills">
+            <thead><tr><th>Habilidade</th><th>Acertos</th><th>Percentual</th><th>Sugestão</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="padding:12px;margin-top:12px">
+        <h3 style="margin-top:0">Plano de Ação Sugerido (2 semanas)</h3>
+        <ol id="actionPlan"></ol>
+        <div class="footer">Dica: revisa os erros com a técnica do “por que errei?” (conteúdo x interpretação x distração).</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      Feito para estudo local. Questões inspiradas no estilo ENEM (conteúdo autoral, sem reprodução de itens oficiais).
+    </footer>
+  </div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
