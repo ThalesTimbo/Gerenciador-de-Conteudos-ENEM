@@ -1,7 +1,9 @@
 # 📘 Quiz de Estudos — Diagnóstico ENEM
 
 **Autor:** Thales (ThalesTimbo)  
-**Contato (opcional):** [GitHub: ThalesTimbo](https://github.com/ThalesTimbo) · [Instagram: @thales_timbo](https://www.instagram.com/thales_timbo/)  
+**Contato:** [GitHub: ThalesTimbo](https://github.com/ThalesTimbo) · [Instagram: @thales_timbo](https://www.instagram.com/thales_timbo/)  
+🌐 [Teste online (deploy)](https://thalestimbo.github.io/Gerenciador-de-Conteudos-ENEM/)
+
 
 Um simulador **local & offline** com 40 questões inspiradas no estilo ENEM. Roda direto no navegador, salva tuas respostas no LocalStorage, gera um relatório por área e por habilidade, e exporta tudo em `.json` para tu guardar ou analisar depois.
 
