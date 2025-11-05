@@ -57,6 +57,7 @@ const questions = [
 // **********************
 const KEY = 'enem_diag_respostas_v1';
 let answers = JSON.parse(localStorage.getItem(KEY) || '{}');
+const THEME_KEY = 'enem_ui_theme';
 
 const skillLabels = {
   interpretacao:"Interpretação",
@@ -95,12 +96,37 @@ function save(){ localStorage.setItem(KEY, JSON.stringify(answers)); }
 function percent(a,b){ return b ? Math.round((a/b)*100) : 0 }
 
 // ****************
+//  Tema (dark/light)
+// ****************
+function applyTheme(theme){
+  const root = document.documentElement;
+  if(theme === 'light'){
+    root.classList.remove('dark');
+  } else {
+    root.classList.add('dark');
+  }
+}
+function initTheme(){
+  const saved = localStorage.getItem(THEME_KEY);
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(saved || (prefersDark ? 'dark' : 'dark'));
+}
+function toggleTheme(){
+  const isDark = document.documentElement.classList.contains('dark');
+  const next = isDark ? 'light' : 'dark';
+  applyTheme(next);
+  localStorage.setItem(THEME_KEY, next);
+}
+
+// ****************
 //  Renderização
 // ****************
 function renderSkillsCloud(){
   const cont = document.getElementById('skillsCloud');
   const tags = [...new Set(questions.map(q=>q.tag))];
-  cont.innerHTML = tags.map(t=>`<span class="pill-mini">${skillLabels[t]||t}</span>`).join('');
+  cont.innerHTML = tags.map(t=>`
+    <span class="pill-mini inline-flex items-center text-[10px] px-2 py-1 rounded-full border border-slate-700 bg-slate-900/60 text-slate-200">${skillLabels[t]||t}</span>
+  `).join('');
 }
 
 function renderStats(){
@@ -119,18 +145,20 @@ function renderQuiz(){
   questions.forEach(q=>{
     const marked = answers[q.id];
     const card = document.createElement('article');
-    card.className = 'q-card';
+    card.className = 'q-card rounded-xl border border-slate-800 bg-slate-900/60 p-4';
     card.innerHTML = `
-      <div class="q-title">${q.id}. <span class="subject-chip">[${q.area}]</span> ${q.enunciado}</div>
-      <div class="options">
+      <div class="q-title font-bold">${q.id}. <span class="subject-chip">[${q.area}]</span> ${q.enunciado}</div>
+      <div class="options grid gap-2 mt-3">
         ${q.alternativas.map((alt,i)=>{
-          const sel = marked===i ? 'selected' : '';
-          return `<div class="option ${sel}" data-qid="${q.id}" data-index="${i}">${String.fromCharCode(65+i)}) ${alt}</div>`
+          const isSelected = marked===i;
+          const base = 'option cursor-pointer rounded-lg border border-slate-700 bg-slate-900/60 px-3 py-2 hover:border-blue-400 transition';
+          const selected = isSelected ? ' selected ring-2 ring-blue-600 border-blue-400' : '';
+          return `<div class="${base}${selected}" data-qid="${q.id}" data-index="${i}">${String.fromCharCode(65+i)}) ${alt}</div>`
         }).join('')}
       </div>
-      <div class="footerbar">
-        <div class="muted small">Habilidade: ${skillLabels[q.tag]||q.tag}</div>
-        ${marked!==undefined? `<div class="small">${marked===q.correta?'<span class="ok">✔ Correto</span>':'<span class="danger">✘ Incorreto</span>'}</div>`:''}
+      <div class="footerbar flex items-center justify-between gap-2 mt-3">
+        <div class="text-slate-400 text-xs">Habilidade: ${skillLabels[q.tag]||q.tag}</div>
+        ${marked!==undefined? `<div class="text-xs">${marked===q.correta?'<span class="text-emerald-500">✔ Correto</span>':'<span class="text-red-500">✘ Incorreto</span>'}</div>`:''}
       </div>
     `;
     root.appendChild(card);
@@ -174,9 +202,9 @@ function buildReport(){
 }
 
 function priorityLabel(p){
-  if(p>=80) return '<span class="ok">Alta (manter)</span>';
-  if(p>=60) return '<span class="warn">Média (reforçar)</span>';
-  return '<span class="danger">Crítica (priorizar)</span>';
+  if(p>=80) return '<span class="text-emerald-500">Alta (manter)</span>';
+  if(p>=60) return '<span class="text-amber-400">Média (reforçar)</span>';
+  return '<span class="text-red-500">Crítica (priorizar)</span>';
 }
 
 const suggestions = {
@@ -220,7 +248,7 @@ function renderResults(){
   Object.entries(areas).forEach(([area, v])=>{
     const p = percent(v.ok, v.total);
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${area}</td><td>${v.ok}/${v.total}</td><td><div class="bar"><i style="width:${p}%"></i></div> ${p}%</td><td>${priorityLabel(p)}</td>`;
+    tr.innerHTML = `<td class="border-b border-slate-800 p-2">${area}</td><td class="border-b border-slate-800 p-2">${v.ok}/${v.total}</td><td class="border-b border-slate-800 p-2"><div class="bar h-2 rounded-full border border-slate-700 bg-slate-900/60 overflow-hidden"><i class="block h-full bg-gradient-to-r from-red-500 via-amber-500 to-emerald-500" style="width:${p}%"></i></div> <span class="ml-1">${p}%</span></td><td class="border-b border-slate-800 p-2">${priorityLabel(p)}</td>`;
     tbA.appendChild(tr);
   });
   // Skills - ordenar pelas piores
@@ -229,7 +257,7 @@ function renderResults(){
   const arr = Object.entries(skills).map(([k,v])=>({k, ...v, p:percent(v.ok,v.total)})).sort((a,b)=>a.p-b.p);
   arr.slice(0,8).forEach(s=>{
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${skillLabels[s.k]||s.k}</td><td>${s.ok}/${s.total}</td><td>${s.p}%</td><td>${suggestions[s.k]||'Revisão dirigida e prática de questões.'}</td>`;
+    tr.innerHTML = `<td class="border-b border-slate-800 p-2">${skillLabels[s.k]||s.k}</td><td class="border-b border-slate-800 p-2">${s.ok}/${s.total}</td><td class="border-b border-slate-800 p-2">${s.p}%</td><td class="border-b border-slate-800 p-2 text-slate-300">${suggestions[s.k]||'Revisão dirigida e prática de questões.'}</td>`;
     tbS.appendChild(tr);
   });
   // Plano de ação
@@ -273,10 +301,13 @@ function resetAll(){
 //  Listeners init
 // ****************
 function init(){
+  initTheme();
   renderSkillsCloud();
   renderQuiz();
   renderStats();
   document.body.addEventListener('click', onOptionClick);
+  const themeBtn = document.getElementById('btnTheme');
+  if(themeBtn){ themeBtn.addEventListener('click', toggleTheme); }
   document.getElementById('btnFinish').addEventListener('click', ()=>{
     const total = questions.length;
     const done = Object.keys(answers).length;

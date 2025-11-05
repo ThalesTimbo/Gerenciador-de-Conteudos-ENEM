@@ -4,85 +4,111 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Diagnóstico ENEM — Pontos Fortes & Fraquezas</title>
-  <link rel="stylesheet" href="./css/styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5', 100: '#d1fae5', 200: '#a7f3d0', 300: '#6ee7b7', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857', 800: '#065f46', 900: '#064e3b'
+            }
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
+<body class="dark bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-200 min-h-screen">
+  <div class="max-w-5xl mx-auto px-6 py-6">
+    <header class="flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-xl bg-[conic-gradient(at_center,theme(colors.green.500),theme(colors.blue.400),theme(colors.red.500))] shadow-[0_0_20px_rgba(16,185,129,.3)]" aria-hidden="true"></div>
         <div>
-          <h1>Diagnóstico ENEM — Pontos Fortes & Fraquezas</h1>
-          <div class="muted small">Local e offline • 40 questões inspiradas no estilo ENEM • Relatório ao final</div>
+          <h1 class="m-0 text-xl sm:text-2xl font-bold">Diagnóstico ENEM — Pontos Fortes & Fraquezas</h1>
+          <div class="text-slate-400 text-xs sm:text-sm">Local e offline • 40 questões inspiradas no estilo ENEM • Relatório ao final</div>
         </div>
       </div>
-      <div>
-        <button class="btn ghost" id="btnExport">Exportar resultados (.json)</button>
+      <div class="flex items-center gap-2">
+        <button id="btnTheme" class="rounded-lg px-3 py-2 text-sm font-semibold border border-slate-700 text-slate-200 bg-slate-900/60 hover:bg-slate-800/60 transition">Tema</button>
+        <button class="rounded-lg px-3 py-2 text-sm font-semibold border border-slate-700 text-slate-200 bg-slate-900/60 hover:bg-slate-800/60 transition" id="btnExport">Exportar resultados (.json)</button>
       </div>
     </header>
 
-    <section class="row hero card">
-      <div>
-        <p>
+    <section class="grid grid-cols-1 gap-4 mt-4 lg:grid-cols-[1.4fr_.9fr]">
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl p-5">
+        <p class="text-slate-300">
           Responde as questões abaixo. No final, tu vais ver um diagnóstico por <b>área</b> (Linguagens, Matemática, Humanas, Natureza) e por <b>habilidades</b> (ex.: interpretação, porcentagem, ecologia etc.), com recomendações do que estudar para evoluir rápido.
         </p>
-        <div class="grid cols-3">
-          <div class="kpi"><h3>Questões</h3><p id="kpiTotal">0</p></div>
-          <div class="kpi"><h3>Respondidas</h3><p id="kpiDone">0</p></div>
-          <div class="kpi"><h3>Acertos</h3><p id="kpiHits">0</p></div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
+          <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-3">
+            <h3 class="m-0 text-xs text-slate-300">Questões</h3>
+            <p id="kpiTotal" class="m-0 mt-1 text-2xl font-extrabold">0</p>
+          </div>
+          <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-3">
+            <h3 class="m-0 text-xs text-slate-300">Respondidas</h3>
+            <p id="kpiDone" class="m-0 mt-1 text-2xl font-extrabold">0</p>
+          </div>
+          <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-3">
+            <h3 class="m-0 text-xs text-slate-300">Acertos</h3>
+            <p id="kpiHits" class="m-0 mt-1 text-2xl font-extrabold">0</p>
+          </div>
         </div>
-        <div style="margin-top:12px">
-          <div class="progress"><div id="progress"></div></div>
+        <div class="mt-3">
+          <div class="h-2 rounded-full border border-slate-800 bg-slate-900/70 overflow-hidden">
+            <div id="progress" class="h-full w-0 bg-gradient-to-r from-green-500 to-blue-500 transition-all duration-700"></div>
+          </div>
         </div>
-        <div style="margin-top:12px" class="muted small">Dica: pode salvar/fechar a página e voltar; tuas respostas ficam salvas neste navegador.</div>
+        <div class="mt-3 text-slate-400 text-xs">Dica: pode salvar/fechar a página e voltar; tuas respostas ficam salvas neste navegador.</div>
       </div>
-      <aside class="card" style="padding:16px;background:#0b1428">
-        <div class="grid">
-          <div class="badge"><span>🎯</span> Foco em diagnóstico</div>
-          <div class="badge"><span>⏱️</span> Sem tempo limite</div>
-          <div class="badge"><span>🔒</span> Dados só no teu navegador</div>
+      <aside class="rounded-2xl border border-slate-800 bg-slate-900/80 shadow-xl p-4">
+        <div class="grid gap-2">
+          <div class="inline-flex items-center gap-2 text-[11px] rounded-full border border-slate-700 bg-slate-900/60 text-slate-200 px-3 py-1"><span>🎯</span> Foco em diagnóstico</div>
+          <div class="inline-flex items-center gap-2 text-[11px] rounded-full border border-slate-700 bg-slate-900/60 text-slate-200 px-3 py-1"><span>⏱️</span> Sem tempo limite</div>
+          <div class="inline-flex items-center gap-2 text-[11px] rounded-full border border-slate-700 bg-slate-900/60 text-slate-200 px-3 py-1"><span>🔒</span> Dados só no teu navegador</div>
         </div>
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap" id="skillsCloud"></div>
-        <div style="margin-top:12px">
-          <button class="btn" id="btnFinish">Finalizar e Ver Diagnóstico</button>
-          <button class="btn secondary" id="btnReset">Reiniciar</button>
+        <div id="skillsCloud" class="mt-3 flex flex-wrap gap-2"></div>
+        <div class="mt-3 flex gap-2">
+          <button class="rounded-xl px-4 py-2 font-semibold text-slate-900 bg-gradient-to-b from-green-500 to-emerald-600 shadow-lg hover:brightness-110 transition" id="btnFinish">Finalizar e Ver Diagnóstico</button>
+          <button class="rounded-xl px-4 py-2 font-semibold text-slate-900 bg-gradient-to-b from-blue-400 to-blue-600 shadow-lg hover:brightness-110 transition" id="btnReset">Reiniciar</button>
         </div>
       </aside>
     </section>
 
-    <section id="quiz" class="grid" style="margin-top:18px">
+    <section id="quiz" class="grid gap-3 mt-4">
       <!-- questions injected here -->
     </section>
 
-    <section id="results" class="card hidden" style="margin-top:18px;padding:18px">
-      <h2 style="margin:0 0 8px 0">Teu Diagnóstico</h2>
-      <div class="muted">Resumo por área e por habilidade, com recomendações do que atacar primeiro.</div>
+    <section id="results" class="hidden rounded-2xl border border-slate-800 bg-slate-900/70 shadow-xl mt-4 p-4">
+      <h2 class="m-0 mb-2 text-xl font-bold">Teu Diagnóstico</h2>
+      <div class="text-slate-400">Resumo por área e por habilidade, com recomendações do que atacar primeiro.</div>
 
-      <div class="grid cols-2" style="margin-top:16px">
-        <div class="card" style="padding:12px">
-          <h3 style="margin-top:0">Desempenho por Área</h3>
-          <table class="table" id="tblAreas">
+      <div class="grid gap-4 mt-4 sm:grid-cols-2">
+        <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+          <h3 class="mt-0">Desempenho por Área</h3>
+          <table class="w-full border-collapse" id="tblAreas">
             <thead><tr><th>Área</th><th>Acertos</th><th>Percentual</th><th>Prioridade</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
-        <div class="card" style="padding:12px">
-          <h3 style="margin-top:0">Habilidades (Top fraquezas)</h3>
-          <table class="table" id="tblSkills">
+        <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+          <h3 class="mt-0">Habilidades (Top fraquezas)</h3>
+          <table class="w-full border-collapse" id="tblSkills">
             <thead><tr><th>Habilidade</th><th>Acertos</th><th>Percentual</th><th>Sugestão</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
       </div>
 
-      <div class="card" style="padding:12px;margin-top:12px">
-        <h3 style="margin-top:0">Plano de Ação Sugerido (2 semanas)</h3>
+      <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-3 mt-3">
+        <h3 class="mt-0">Plano de Ação Sugerido (2 semanas)</h3>
         <ol id="actionPlan"></ol>
-        <div class="footer">Dica: revisa os erros com a técnica do “por que errei?” (conteúdo x interpretação x distração).</div>
+        <div class="mt-3 text-slate-400 text-xs">Dica: revisa os erros com a técnica do “por que errei?” (conteúdo x interpretação x distração).</div>
       </div>
     </section>
 
-    <footer class="footer">
+    <footer class="mt-6 text-slate-400 text-xs">
       Feito para estudo local. Questões inspiradas no estilo ENEM (conteúdo autoral, sem reprodução de itens oficiais).
     </footer>
   </div>
